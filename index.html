@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Problem Log — CF Writeups</title>
+<meta name="description" content="A log of Codeforces problem solve writeups.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <p class="eyebrow">codeforces-writeups</p>
+  <h1>Problem Log</h1>
+  <p class="tagline">Writeups from problems I've solved on Codeforces — approach, key insight, and a working solution for each.</p>
+  <div class="stats-row" id="stats-row"></div>
+</header>
+
+<main class="layout">
+  <aside class="list-panel">
+    <div class="controls">
+      <input type="text" id="search-input" placeholder="search by title, id, or tag..." autocomplete="off">
+      <div class="filter-row">
+        <select id="tier-filter">
+          <option value="">all ratings</option>
+        </select>
+        <select id="tag-filter">
+          <option value="">all tags</option>
+        </select>
+      </div>
+    </div>
+    <p class="list-meta" id="list-meta"></p>
+    <div id="problem-list"></div>
+  </aside>
+
+  <section class="reader-panel" id="reader-panel">
+    <div class="reader-empty">select a problem from the list<br>to read the writeup</div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  built with a JSON file and no build step · edit <code>data/problems.json</code> to add a writeup
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/12.0.2/marked.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
