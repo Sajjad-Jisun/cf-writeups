@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Writeup → JSON Generator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #13161c;
+  --panel: #191d25;
+  --panel-2: #1f2430;
+  --border: #2a3040;
+  --text: #e9e7e1;
+  --text-dim: #8d94a3;
+  --text-faint: #5c6373;
+  --accent: #46b672;
+  --accent-dim: #2d7a4d;
+  --warn: #ff9c33;
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --display: 'Space Grotesk', 'Inter', sans-serif;
+  --body: 'Inter', -apple-system, sans-serif;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--body);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 40px 28px 80px; }
+.eyebrow {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
+.eyebrow::before { content: "// "; color: var(--text-faint); }
+h1 {
+  font-family: var(--display);
+  font-size: clamp(26px, 4vw, 38px);
+  font-weight: 700;
+  margin: 0 0 8px;
+  letter-spacing: -0.01em;
+}
+.sub { color: var(--text-dim); margin: 0 0 32px; max-width: 62ch; font-size: 15px; }
+.sub code { font-family: var(--mono); background: var(--panel-2); padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  align-items: start;
+}
+@media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 22px 24px;
+}
+
+.panel h2 {
+  font-family: var(--display);
+  font-size: 15px;
+  margin: 0 0 18px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.field { margin-bottom: 16px; }
+.field label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.field .hint { color: var(--text-faint); font-weight: 400; margin-left: 6px; }
+
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+input, textarea, select {
+  width: 100%;
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 9px 10px;
+  border-radius: 4px;
+}
+textarea { font-family: var(--mono); resize: vertical; min-height: 90px; line-height: 1.6; }
+#writeup { min-height: 260px; }
+input:focus, textarea:focus, select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+input::placeholder, textarea::placeholder { color: var(--text-faint); }
+
+.derived {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-top: 4px;
+}
+.derived b { color: var(--accent); font-weight: 600; }
+
+.toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+.toggle-row input { width: auto; }
+
+.output-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+button.copy-btn {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--accent);
+  color: #0c1410;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+button.copy-btn:hover { opacity: 0.85; }
+button.copy-btn.copied { background: var(--warn); }
+
+pre#output {
+  background: var(--panel-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 16px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: var(--text);
+  max-height: 620px;
+  overflow-y: auto;
+  margin: 0;
+}
+
+.error-list {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--warn);
+  margin: 0 0 12px;
+  padding-left: 18px;
+}
+.error-list:empty { display: none; }
+
+.footer-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-faint);
+  margin-top: 16px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">problem-log tools</p>
+  <h1>Writeup → JSON Generator</h1>
+  <p style="margin:-4px 0 20px;"><a href="../" style="font-family: var(--mono); font-size: 12px; color: var(--text-dim);">← back to Problem Log</a></p>
+  <p class="sub">Fill in the fields, paste the writeup as Markdown, and this builds one ready-to-use object for <code>data/problems.json</code>. Newlines and quotes are escaped automatically — just paste the result into the array.</p>
+
+  <div class="grid">
+    <div class="panel">
+      <h2>Problem details</h2>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <label for="contest">Contest ID</label>
+            <input id="contest" placeholder="1849" inputmode="numeric">
+          </div>
+          <div>
+            <label for="index">Index</label>
+            <input id="index" placeholder="D" maxlength="3">
+          </div>
+        </div>
+        <p class="derived">id → <b id="idPreview">—</b> · url → <b id="urlPreview">—</b></p>
+      </div>
+
+      <div class="toggle-row">
+        <input type="checkbox" id="overrideUrl">
+        <label for="overrideUrl" style="margin:0;">use a custom URL instead of the auto-built one</label>
+      </div>
+      <div class="field" id="customUrlField" style="display:none;">
+        <label for="customUrl">Custom URL</label>
+        <input id="customUrl" placeholder="https://codeforces.com/...">
+      </div>
+
+      <div class="field">
+        <label for="title">Title</label>
+        <input id="title" placeholder="Doremy's IQ Test">
+      </div>
+
+      <div class="field">
+        <div class="row2">
+          <div>
+            <label for="rating">Rating <span class="hint">(leave blank if unrated)</span></label>
+            <input id="rating" placeholder="2400" inputmode="numeric">
+          </div>
+          <div>
+            <label for="date">Date solved</label>
+            <input id="date" type="date">
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="tags">Tags <span class="hint">(comma separated)</span></label>
+        <input id="tags" placeholder="binary search, data structures, greedy">
+      </div>
+
+      <div class="field">
+        <label for="verdict">Verdict</label>
+        <select id="verdict">
+          <option>Accepted</option>
+          <option>Accepted (upsolved)</option>
+          <option>Accepted (after contest)</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="writeup">Writeup <span class="hint">(Markdown — headings, lists, \`code\`, and \`\`\` code blocks all work)</span></label>
+        <textarea id="writeup" placeholder="## Approach&#10;&#10;Explain your idea here...&#10;&#10;\`\`\`cpp&#10;// code&#10;\`\`\`"></textarea>
+      </div>
+    </div>
+
+    <div class="panel">
+      <h2>Generated JSON</h2>
+      <ul class="error-list" id="errors"></ul>
+      <div class="output-head">
+        <span class="derived" id="statusLine">fill in the form to generate</span>
+        <button class="copy-btn" id="copyBtn">copy</button>
+      </div>
+      <pre id="output">// waiting for input...</pre>
+      <p class="footer-note">paste this object inside the <code>[ ... ]</code> array in data/problems.json, and add a comma after the previous entry if it's not the last one.</p>
+    </div>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+
+const fields = ["contest","index","title","rating","tags","verdict","writeup","customUrl"];
+fields.forEach(id => $(id).addEventListener("input", generate));
+$("date").addEventListener("input", generate);
+$("overrideUrl").addEventListener("change", () => {
+  $("customUrlField").style.display = $("overrideUrl").checked ? "block" : "none";
+  generate();
+});
+
+// default date = today
+$("date").value = new Date().toISOString().slice(0, 10);
+
+function buildUrl(contest, index) {
+  if (!contest || !index) return "";
+  return `https://codeforces.com/problemset/problem/${contest}/${index.toUpperCase()}`;
+}
+
+function generate() {
+  const contest = $("contest").value.trim();
+  const index = $("index").value.trim();
+  const id = (contest + index).toUpperCase();
+  const autoUrl = buildUrl(contest, index);
+  const useCustom = $("overrideUrl").checked;
+  const url = useCustom ? $("customUrl").value.trim() : autoUrl;
+
+  $("idPreview").textContent = id || "—";
+  $("urlPreview").textContent = useCustom ? "(custom, see field below)" : (autoUrl || "—");
+
+  const title = $("title").value.trim();
+  const ratingRaw = $("rating").value.trim();
+  const rating = ratingRaw === "" ? null : Number(ratingRaw);
+  const date = $("date").value;
+  const tags = $("tags").value.split(",").map(t => t.trim()).filter(Boolean);
+  const verdict = $("verdict").value;
+  const writeup = $("writeup").value;
+
+  const errors = [];
+  if (!id) errors.push("Contest ID and Index are needed to build the problem id.");
+  if (!title) errors.push("Title is empty.");
+  if (!url) errors.push("No URL — fill in Contest/Index, or check the custom URL box.");
+  if (ratingRaw !== "" && Number.isNaN(rating)) errors.push("Rating isn't a number.");
+  if (!writeup.trim()) errors.push("Writeup is empty.");
+
+  $("errors").innerHTML = errors.map(e => `<li>${escapeHtml(e)}</li>`).join("");
+
+  if (errors.length) {
+    $("statusLine").textContent = `${errors.length} thing${errors.length > 1 ? "s" : ""} to fix`;
+    $("output").textContent = "// fix the items above, then this will update";
+    return;
+  }
+
+  const obj = {
+    id,
+    contest,
+    index: index.toUpperCase(),
+    title,
+    rating,
+    tags,
+    url,
+    date,
+    verdict,
+    writeup,
+  };
+
+  const json = JSON.stringify(obj, null, 2);
+  $("output").textContent = json + ",";
+  $("statusLine").textContent = "looks good — ready to paste";
+}
+
+$("copyBtn").addEventListener("click", () => {
+  const text = $("output").textContent;
+  if (!text || text.startsWith("//")) return;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = $("copyBtn");
+    const original = btn.textContent;
+    btn.textContent = "copied!";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = original; btn.classList.remove("copied"); }, 1400);
+  });
+});
+
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"']/g, c => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+  }[c]));
+}
+
+generate();
+</script>
+</body>
+</html>
