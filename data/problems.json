@@ -1,11 +1,30 @@
 [
   {
+    "id": "2244C",
+    "title": "C. Stepan and Permutation",
+    "rating": null,
+    "tags": [],
+    "url": "https://codeforces.com/contest/2244/problem/C",
+    "date": "2026-07-17",
+    "verdict": "Accepted",
+    "contest": "2244",
+    "index": "C",
+    "problemStatement": "আমার x,y দেওয়া থাকবে। লাইনে আমি x,y ঘর সামনে পিছনে গিয়ে arry sort করতে পারবো কিনা",
+    "intuition": "গ্রাফ দিয়ে করা যায়",
+    "conceptsLearned": "x,y এর GCD নিয়ে v[i]%gcd == i%gcd হলে যাবে",
+    "approach": "Graph\nGCD"
+  },
+  {
     "id": "1849D",
     "contest": "1849",
     "index": "D",
     "title": "Doremy's IQ Test",
     "rating": 2400,
-    "tags": ["binary search", "data structures", "greedy"],
+    "tags": [
+      "binary search",
+      "data structures",
+      "greedy"
+    ],
     "url": "https://codeforces.com/problemset/problem/1849/D",
     "date": "2026-07-02",
     "verdict": "Accepted",
@@ -22,7 +41,11 @@
     "index": "B",
     "title": "AND Sorting",
     "rating": 1300,
-    "tags": ["bitmasks", "constructive algorithms", "graphs"],
+    "tags": [
+      "bitmasks",
+      "constructive algorithms",
+      "graphs"
+    ],
     "url": "https://codeforces.com/problemset/problem/1682/B",
     "date": "2026-06-21",
     "verdict": "Accepted",
@@ -39,7 +62,10 @@
     "index": "A",
     "title": "Watermelon",
     "rating": 800,
-    "tags": ["brute force", "math"],
+    "tags": [
+      "brute force",
+      "math"
+    ],
     "url": "https://codeforces.com/problemset/problem/4/A",
     "date": "2026-06-05",
     "verdict": "Accepted",
