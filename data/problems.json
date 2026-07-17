@@ -1,11 +1,27 @@
 [
   {
+    "id": "1400Q",
+    "contest": "1400",
+    "index": "Q",
+    "title": "C. Stepan and Permutation",
+    "rating": null,
+    "tags": [],
+    "url": "https://codeforces.com/problemset/problem/1400/Q",
+    "date": "2026-07-17",
+    "verdict": "Accepted",
+    "writeup": "This is mind fuyck"
+  },
+  {
     "id": "1849D",
     "contest": "1849",
     "index": "D",
     "title": "Doremy's IQ Test",
     "rating": 2400,
-    "tags": ["binary search", "data structures", "greedy"],
+    "tags": [
+      "binary search",
+      "data structures",
+      "greedy"
+    ],
     "url": "https://codeforces.com/problemset/problem/1849/D",
     "date": "2026-07-02",
     "verdict": "Accepted",
@@ -17,7 +33,11 @@
     "index": "B",
     "title": "AND Sorting",
     "rating": 1300,
-    "tags": ["bitmasks", "constructive algorithms", "graphs"],
+    "tags": [
+      "bitmasks",
+      "constructive algorithms",
+      "graphs"
+    ],
     "url": "https://codeforces.com/problemset/problem/1682/B",
     "date": "2026-06-21",
     "verdict": "Accepted",
@@ -29,7 +49,10 @@
     "index": "A",
     "title": "Watermelon",
     "rating": 800,
-    "tags": ["brute force", "math"],
+    "tags": [
+      "brute force",
+      "math"
+    ],
     "url": "https://codeforces.com/problemset/problem/4/A",
     "date": "2026-06-05",
     "verdict": "Accepted",
