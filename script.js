@@ -125,9 +125,10 @@ function renderList() {
         <span class="row-rating">${p.rating != null ? p.rating : "—"}</span>
       </div>
       <div class="row-title">${escapeHtml(p.title)}</div>
-      <div class="row-tags">
-        ${(p.tags || []).slice(0, 4).map(t => `<span class="row-tag">${escapeHtml(t)}</span>`).join("")}
-      </div>
+      ${p.reason
+        ? `<div class="row-reason">${escapeHtml(p.reason)}</div>`
+        : `<div class="row-tags">${(p.tags || []).slice(0, 4).map(t => `<span class="row-tag">${escapeHtml(t)}</span>`).join("")}</div>`
+      }
     `;
     row.addEventListener("click", () => selectProblem(p.id));
     els.list.appendChild(row);
@@ -165,6 +166,11 @@ function renderReader() {
       <span>tier <b style="color:${tier.color}">${escapeHtml(tier.name)}</b></span>
       <span>solved <b>${escapeHtml(p.date || "—")}</b></span>
     </div>
+    ${p.reason ? `
+    <div class="reason-card">
+      <span class="reason-label">Why I picked this</span>
+      <p>${escapeHtml(p.reason)}</p>
+    </div>` : ""}
     <div class="reader-body">${bodyHtml}</div>
     <div class="reader-footer">
       <a href="${escapeAttr(p.url)}" target="_blank" rel="noopener">Open on Codeforces ↗</a>

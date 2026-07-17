@@ -292,8 +292,13 @@ button.publish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
       </div>
 
       <div class="field">
-        <label for="tags">Tags <span class="hint">(comma separated)</span></label>
+        <label for="tags">Tags <span class="hint">(comma separated — used for filtering, no longer shown as pills)</span></label>
         <input id="tags" placeholder="binary search, data structures, greedy">
+      </div>
+
+      <div class="field">
+        <label for="reason">Why did you pick this problem? <span class="hint">(shown instead of tags on the list + reader page)</span></label>
+        <textarea id="reason" style="min-height:70px;" placeholder="e.g. wanted to practice binary-searching on the answer instead of the array..."></textarea>
       </div>
 
       <div class="field">
@@ -381,7 +386,7 @@ button.publish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 const $ = id => document.getElementById(id);
 let lastObj = null;
 
-const fields = ["contest","index","title","rating","tags","verdict","writeup","customUrl"];
+const fields = ["contest","index","title","rating","tags","reason","verdict","writeup","customUrl"];
 fields.forEach(id => $(id).addEventListener("input", generate));
 $("date").addEventListener("input", generate);
 $("overrideUrl").addEventListener("change", () => {
@@ -413,6 +418,7 @@ function generate() {
   const rating = ratingRaw === "" ? null : Number(ratingRaw);
   const date = $("date").value;
   const tags = $("tags").value.split(",").map(t => t.trim()).filter(Boolean);
+  const reason = $("reason").value.trim();
   const verdict = $("verdict").value;
   const writeup = $("writeup").value;
 
@@ -443,8 +449,12 @@ function generate() {
     url,
     date,
     verdict,
+    reason: reason || undefined,
     writeup,
   };
+
+  // drop reason key entirely if empty, rather than writing "reason": null
+  if (!reason) delete obj.reason;
 
   const json = JSON.stringify(obj, null, 2);
   $("output").textContent = json + ",";
