@@ -10,7 +10,11 @@
     "date": "2026-07-02",
     "verdict": "Accepted",
     "reason": "Wanted a harder Div 1 problem to practice binary-searching on the answer instead of the array — this one forced me to find the monotone condition myself.",
-    "writeup": "## Reading the problem\n\nWe're asked whether we can remove exactly one element from a prefix of the array such that the remaining array, sorted, has a fixed set of consequences on later queries. The key constraint is that queries are monotone in a way that lets us binary search on the answer.\n\n## Key observation\n\nIf a candidate index `k` works, every index `k' > k` with the same parity also works. This monotonicity is what unlocks a binary search over the candidate positions instead of a brute-force scan.\n\n## Approach\n\n1. Binary search on the smallest valid index.\n2. For each candidate, check feasibility in `O(log n)` using a Fenwick tree over the value range.\n3. Maintain the Fenwick tree incrementally as the binary search window moves, so the total complexity stays `O(n log^2 n)`.\n\n```cpp\nbool check(int k) {\n    // feasibility check using fenwick tree over compressed values\n    // returns true if removing prefix[..k] keeps the invariant\n    return fenwick.query(lo, hi) == expected;\n}\n```\n\n## Complexity\n\n`O(n log^2 n)` time, `O(n)` space. Comfortably inside the 2 second limit for `n <= 2*10^5`.\n\n## Takeaway\n\nWhen a problem's feasibility check is monotone in an index you don't immediately see as \"the answer\", try binary searching on it directly rather than looking for a closed-form formula."
+    "problemStatement": "Given a sequence of queries over a growing prefix, determine for each query whether removing exactly one element still lets the remaining values satisfy a fixed property, where queries are guaranteed to be monotone in a hidden way.",
+    "intuition": "My first instinct was to look for a closed-form formula relating index parity to feasibility — the small sample cases looked suspiciously periodic.",
+    "whyWrong": "That fell apart with duplicate values in the array. The periodic pattern was a coincidence of the sample input, not a real property — the actual feasibility depends on cumulative Fenwick-tree state as the search window advances, which a formula can't capture.",
+    "conceptsLearned": "Binary searching over an index rather than a value, proving monotonicity before trusting a binary search, and maintaining a Fenwick tree incrementally inside a search loop instead of rebuilding it.",
+    "approach": "## Key observation\n\nIf a candidate index `k` works, every index `k' > k` with the same parity also works. This monotonicity is what unlocks a binary search over the candidate positions instead of a brute-force scan.\n\n## Approach\n\n1. Binary search on the smallest valid index.\n2. For each candidate, check feasibility in `O(log n)` using a Fenwick tree over the value range.\n3. Maintain the Fenwick tree incrementally as the binary search window moves, so the total complexity stays `O(n log^2 n)`.\n\n```cpp\nbool check(int k) {\n    // feasibility check using fenwick tree over compressed values\n    // returns true if removing prefix[..k] keeps the invariant\n    return fenwick.query(lo, hi) == expected;\n}\n```\n\n## Complexity\n\n`O(n log^2 n)` time, `O(n)` space. Comfortably inside the 2 second limit for `n <= 2*10^5`."
   },
   {
     "id": "1682B",
@@ -23,7 +27,11 @@
     "date": "2026-06-21",
     "verdict": "Accepted",
     "reason": "Bitmask constructive problems always trip me up — picked this to build intuition for when AND-swaps form equivalence classes.",
-    "writeup": "## Idea\n\nWe only get to swap pairs `(i, j)` when `a_i AND a_j` equals some fixed mask `k`. The question is what's the largest `k` that still lets us fully sort the array.\n\n## Insight\n\nAny two positions that are *out of order* relative to the sorted array must be swappable, directly or transitively. So `k` must be a submask of `a_i AND a_j` for every misplaced pair `(i, j)`. Taking the AND of all such pairs (equivalently, the AND of `p_i` and `i` for every position where the permutation differs from sorted order) gives the tightest possible `k`.\n\n## Solution\n\n```python\nk = (1 << 30) - 1\nfor i in range(n):\n    if a[i] != sorted_a[i]:\n        k &= a[i] & sorted_a[i]\nprint(k)\n```\n\n## Why this works\n\nSwapping is transitive when the AND condition holds for a chain of intermediate elements, so we don't need every pair to be directly swappable, just connected through the allowed-swap graph. Restricting `k` to the AND of all *displaced* pairs is both necessary and sufficient."
+    "problemStatement": "We may swap two positions i, j only when a_i AND a_j equals some fixed mask k. Find the largest k that still allows fully sorting the array.",
+    "intuition": "I assumed every out-of-order pair needed to be directly swappable, so I started computing the AND of adjacent inversions only.",
+    "whyWrong": "That undercounted valid values of k. Swaps chain transitively through intermediate elements, so restricting to adjacent pairs missed cases where a longer chain of swaps still sorted the array correctly.",
+    "conceptsLearned": "Transitivity in swap-graphs, ANDing a bitmask condition across an entire permutation, and recognizing connected components implied by an operation rather than stated explicitly.",
+    "approach": "## Insight\n\nAny two positions that are *out of order* relative to the sorted array must be swappable, directly or transitively. So `k` must be a submask of `a_i AND a_j` for every misplaced pair `(i, j)`. Taking the AND of all such pairs gives the tightest possible `k`.\n\n## Solution\n\n```python\nk = (1 << 30) - 1\nfor i in range(n):\n    if a[i] != sorted_a[i]:\n        k &= a[i] & sorted_a[i]\nprint(k)\n```\n\n## Why this works\n\nSwapping is transitive when the AND condition holds for a chain of intermediate elements, so we don't need every pair to be directly swappable, just connected through the allowed-swap graph."
   },
   {
     "id": "4A",
@@ -35,6 +43,9 @@
     "url": "https://codeforces.com/problemset/problem/4/A",
     "date": "2026-06-05",
     "verdict": "Accepted",
-    "writeup": "## Approach\n\nAn even number `w` can be split into two positive even parts unless `w == 2`. Just check `w % 2 == 0 and w > 2`.\n\n```python\nw = int(input())\nprint(\"YES\" if w % 2 == 0 and w > 2 else \"NO\")\n```\n\nA good warm-up problem, nothing more to it than the parity check."
+    "problemStatement": "Given a weight w, decide whether the watermelon can be split into two positive even halves.",
+    "intuition": "Recognized immediately as a parity check with one edge case to watch for.",
+    "conceptsLearned": "Careful handling of the single edge case (w = 2) in an otherwise trivial parity check.",
+    "approach": "## Approach\n\nAn even number `w` can be split into two positive even parts unless `w == 2`. Just check `w % 2 == 0 and w > 2`.\n\n```python\nw = int(input())\nprint(\"YES\" if w % 2 == 0 and w > 2 else \"NO\")\n```\n\nA good warm-up problem, nothing more to it than the parity check."
   }
 ]

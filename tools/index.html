@@ -8,30 +8,37 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #13161c;
-  --panel: #191d25;
-  --panel-2: #1f2430;
+  --bg: #10131a;
+  --panel: #181c26;
+  --panel-2: #1e2330;
   --border: #2a3040;
-  --text: #e9e7e1;
+  --border-soft: rgba(255, 255, 255, 0.07);
+  --text: #ece9e2;
   --text-dim: #8d94a3;
   --text-faint: #5c6373;
-  --accent: #46b672;
+  --accent: #4ec48a;
+  --accent-2: #5a86ff;
   --accent-dim: #2d7a4d;
   --warn: #ff9c33;
   --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --display: 'Space Grotesk', 'Inter', sans-serif;
   --body: 'Inter', -apple-system, sans-serif;
+  --ease: cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 * { box-sizing: border-box; }
 body {
   margin: 0;
-  background: var(--bg);
   color: var(--text);
   font-family: var(--body);
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(1000px circle at 10% -10%, rgba(78, 196, 138, 0.13), transparent 55%),
+    radial-gradient(800px circle at 95% 0%, rgba(90, 134, 255, 0.11), transparent 50%);
+  background-attachment: fixed, fixed;
 }
-.wrap { max-width: 1180px; margin: 0 auto; padding: 40px 28px 80px; }
+.wrap { max-width: 1200px; margin: 0 auto; padding: 40px 28px 80px; }
 .eyebrow {
   font-family: var(--mono);
   font-size: 13px;
@@ -41,27 +48,33 @@ body {
 .eyebrow::before { content: "// "; color: var(--text-faint); }
 h1 {
   font-family: var(--display);
-  font-size: clamp(26px, 4vw, 38px);
+  font-size: clamp(28px, 4vw, 40px);
   font-weight: 700;
   margin: 0 0 8px;
   letter-spacing: -0.01em;
+  background: linear-gradient(120deg, #f4fff8 0%, var(--accent) 45%, var(--accent-2) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  display: inline-block;
 }
-.sub { color: var(--text-dim); margin: 0 0 32px; max-width: 62ch; font-size: 15px; }
+.sub { color: var(--text-dim); margin: 0 0 32px; max-width: 66ch; font-size: 15px; }
 .sub code { font-family: var(--mono); background: var(--panel-2); padding: 1px 5px; border-radius: 3px; font-size: 0.9em; }
 
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 28px;
+  gap: 24px;
   align-items: start;
 }
 @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } }
 
 .panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
+  background: linear-gradient(160deg, var(--panel), var(--panel-2));
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
   padding: 22px 24px;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset, 0 10px 30px -14px rgba(0, 0, 0, 0.6);
 }
 
 .panel h2 {
@@ -73,6 +86,17 @@ h1 {
   letter-spacing: 0.05em;
 }
 
+.section-divider {
+  margin: 22px 0 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-soft);
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-faint);
+}
+
 .field { margin-bottom: 16px; }
 .field label {
   display: block;
@@ -81,26 +105,27 @@ h1 {
   color: var(--text-dim);
   margin-bottom: 6px;
 }
-.field .hint { color: var(--text-faint); font-weight: 400; margin-left: 6px; }
+.field .hint { color: var(--text-faint); font-weight: 400; margin-left: 4px; }
 
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 
 input, textarea, select {
   width: 100%;
   background: var(--panel-2);
-  border: 1px solid var(--border);
+  border: 1px solid var(--border-soft);
   color: var(--text);
   font-family: var(--mono);
   font-size: 13px;
-  padding: 9px 10px;
-  border-radius: 4px;
+  padding: 10px 11px;
+  border-radius: 8px;
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
 }
-textarea { font-family: var(--mono); resize: vertical; min-height: 90px; line-height: 1.6; }
-#writeup { min-height: 260px; }
+textarea { font-family: var(--mono); resize: vertical; min-height: 80px; line-height: 1.6; }
+#approach { min-height: 240px; }
 input:focus, textarea:focus, select:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: 1px;
+  outline: none;
+  border-color: var(--accent-dim);
+  box-shadow: 0 0 0 3px rgba(78, 196, 138, 0.12);
 }
 input::placeholder, textarea::placeholder { color: var(--text-faint); }
 
@@ -108,9 +133,40 @@ input::placeholder, textarea::placeholder { color: var(--text-faint); }
   font-family: var(--mono);
   font-size: 12px;
   color: var(--text-faint);
-  margin-top: 4px;
+  margin-top: 6px;
 }
 .derived b { color: var(--accent); font-weight: 600; }
+
+.autofill-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0 4px;
+}
+
+button.mini-btn {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  font-weight: 600;
+  background: transparent;
+  color: var(--accent-2);
+  border: 1px solid rgba(90, 134, 255, 0.35);
+  padding: 7px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s ease;
+}
+button.mini-btn:hover:not(:disabled) { background: rgba(90, 134, 255, 0.1); }
+button.mini-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#autofillStatus {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--text-faint);
+}
+#autofillStatus.ok { color: var(--accent); }
+#autofillStatus.err { color: var(--warn); }
 
 .toggle-row {
   display: flex;
@@ -138,7 +194,7 @@ button.copy-btn {
   color: #0c1410;
   border: none;
   padding: 8px 14px;
-  border-radius: 4px;
+  border-radius: 20px;
   cursor: pointer;
   transition: opacity 0.15s ease;
 }
@@ -147,8 +203,8 @@ button.copy-btn.copied { background: var(--warn); }
 
 pre#output {
   background: var(--panel-2);
-  border: 1px solid var(--border);
-  border-radius: 6px;
+  border: 1px solid var(--border-soft);
+  border-radius: 10px;
   padding: 16px;
   font-family: var(--mono);
   font-size: 12.5px;
@@ -179,7 +235,7 @@ pre#output {
 
 .publish-panel {
   margin-top: 22px;
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--border-soft);
   padding-top: 18px;
 }
 
@@ -202,7 +258,7 @@ details[open] .publish-summary::before { transform: rotate(90deg); }
 .warn-box {
   background: rgba(255, 156, 51, 0.08);
   border: 1px solid rgba(255, 156, 51, 0.35);
-  border-radius: 6px;
+  border-radius: 10px;
   padding: 10px 12px;
   font-family: var(--mono);
   font-size: 11.5px;
@@ -220,7 +276,7 @@ button.publish-btn {
   color: var(--accent);
   border: 1px solid var(--accent-dim);
   padding: 9px 16px;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   width: 100%;
   transition: background 0.15s ease;
@@ -244,36 +300,43 @@ button.publish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
   <p class="eyebrow">problem-log tools</p>
   <h1>Writeup → JSON Generator</h1>
   <p style="margin:-4px 0 20px;"><a href="../" style="font-family: var(--mono); font-size: 12px; color: var(--text-dim);">← back to Problem Log</a></p>
-  <p class="sub">Fill in the fields, paste the writeup as Markdown, and this builds one ready-to-use object for <code>data/problems.json</code>. Newlines and quotes are escaped automatically — just paste the result into the array.</p>
+  <p class="sub">Paste the problem URL, fill in the boxes, and this builds one ready-to-use object for <code>data/problems.json</code>. Contest ID and Index are optional — they're auto-detected from the URL. Newlines and quotes are escaped automatically.</p>
 
   <div class="grid">
     <div class="panel">
       <h2>Problem details</h2>
 
       <div class="field">
-        <div class="row2">
-          <div>
-            <label for="contest">Contest ID</label>
-            <input id="contest" placeholder="1849" inputmode="numeric">
-          </div>
-          <div>
-            <label for="index">Index</label>
-            <input id="index" placeholder="D" maxlength="3">
-          </div>
-        </div>
-        <p class="derived">id → <b id="idPreview">—</b> · url → <b id="urlPreview">—</b></p>
-      </div>
-
-      <div class="toggle-row">
-        <input type="checkbox" id="overrideUrl">
-        <label for="overrideUrl" style="margin:0;">use a custom URL instead of the auto-built one</label>
-      </div>
-      <div class="field" id="customUrlField" style="display:none;">
-        <label for="customUrl">Custom URL</label>
-        <input id="customUrl" placeholder="https://codeforces.com/...">
+        <label for="problemUrl">Problem URL</label>
+        <input id="problemUrl" placeholder="https://codeforces.com/problemset/problem/1849/D">
+        <p class="derived" id="urlParseStatus"></p>
       </div>
 
       <div class="field">
+        <div class="row2">
+          <div>
+            <label for="contest">Contest ID <span class="hint">(optional)</span></label>
+            <input id="contest" placeholder="auto-detected" inputmode="numeric">
+          </div>
+          <div>
+            <label for="index">Index <span class="hint">(optional)</span></label>
+            <input id="index" placeholder="auto-detected" maxlength="3">
+          </div>
+        </div>
+        <p class="derived">id → <b id="idPreview">—</b></p>
+      </div>
+
+      <div class="field">
+        <label for="customId">Custom ID <span class="hint">(only needed if Contest ID/Index are blank, e.g. gym problems)</span></label>
+        <input id="customId" placeholder="e.g. GYM104566A">
+      </div>
+
+      <div class="autofill-row">
+        <button type="button" class="mini-btn" id="autofillBtn">try auto-fill title / rating / tags from Codeforces</button>
+        <span id="autofillStatus"></span>
+      </div>
+
+      <div class="field" style="margin-top:14px;">
         <label for="title">Title</label>
         <input id="title" placeholder="Doremy's IQ Test">
       </div>
@@ -292,13 +355,8 @@ button.publish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
       </div>
 
       <div class="field">
-        <label for="tags">Tags <span class="hint">(comma separated — used for filtering, no longer shown as pills)</span></label>
+        <label for="tags">Tags <span class="hint">(comma separated — used for filtering, shown as "Topics")</span></label>
         <input id="tags" placeholder="binary search, data structures, greedy">
-      </div>
-
-      <div class="field">
-        <label for="reason">Why did you pick this problem? <span class="hint">(shown instead of tags on the list + reader page)</span></label>
-        <textarea id="reason" style="min-height:70px;" placeholder="e.g. wanted to practice binary-searching on the answer instead of the array..."></textarea>
       </div>
 
       <div class="field">
@@ -310,9 +368,36 @@ button.publish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
         </select>
       </div>
 
+      <div class="section-divider">the boxes</div>
+
       <div class="field">
-        <label for="writeup">Writeup <span class="hint">(Markdown — headings, lists, \`code\`, and \`\`\` code blocks all work)</span></label>
-        <textarea id="writeup" placeholder="## Approach&#10;&#10;Explain your idea here...&#10;&#10;\`\`\`cpp&#10;// code&#10;\`\`\`"></textarea>
+        <label for="reason">Why did you pick this problem?</label>
+        <textarea id="reason" style="min-height:64px;" placeholder="e.g. wanted to practice binary-searching on the answer..."></textarea>
+      </div>
+
+      <div class="field">
+        <label for="problemStatement">Problem statement, in brief</label>
+        <textarea id="problemStatement" style="min-height:64px;" placeholder="One or two sentences summarizing what's being asked"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="intuition">My intuition</label>
+        <textarea id="intuition" style="min-height:64px;" placeholder="What did you think the approach was, at first?"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="whyWrong">Why my intuition was wrong <span class="hint">(optional — skip if you got it right first try)</span></label>
+        <textarea id="whyWrong" style="min-height:64px;" placeholder="What broke, and why?"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="conceptsLearned">Concepts I learned from this problem</label>
+        <textarea id="conceptsLearned" style="min-height:64px;" placeholder="Techniques, patterns, or gotchas worth remembering"></textarea>
+      </div>
+
+      <div class="field">
+        <label for="approach">Approach <span class="hint">(Markdown — headings, lists, \`code\`, and \`\`\` code blocks all work)</span></label>
+        <textarea id="approach" placeholder="## Approach&#10;&#10;Explain your solution...&#10;&#10;\`\`\`cpp&#10;// code&#10;\`\`\`"></textarea>
       </div>
     </div>
 
@@ -386,32 +471,96 @@ button.publish-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 const $ = id => document.getElementById(id);
 let lastObj = null;
 
-const fields = ["contest","index","title","rating","tags","reason","verdict","writeup","customUrl"];
+const fields = ["contest","index","customId","title","rating","tags","reason",
+  "problemStatement","intuition","whyWrong","conceptsLearned","verdict","approach"];
 fields.forEach(id => $(id).addEventListener("input", generate));
 $("date").addEventListener("input", generate);
-$("overrideUrl").addEventListener("change", () => {
-  $("customUrlField").style.display = $("overrideUrl").checked ? "block" : "none";
-  generate();
-});
 
 // default date = today
 $("date").value = new Date().toISOString().slice(0, 10);
 
-function buildUrl(contest, index) {
-  if (!contest || !index) return "";
-  return `https://codeforces.com/problemset/problem/${contest}/${index.toUpperCase()}`;
+// ---------- URL parsing ----------
+function parseCfUrl(url) {
+  if (!url) return null;
+  const patterns = [
+    /codeforces\.com\/problemset\/problem\/(\d+)\/([A-Za-z0-9]+)/i,
+    /codeforces\.com\/contest\/(\d+)\/problem\/([A-Za-z0-9]+)/i,
+    /codeforces\.com\/gym\/(\d+)\/problem\/([A-Za-z0-9]+)/i,
+  ];
+  for (const re of patterns) {
+    const m = url.match(re);
+    if (m) return { contest: m[1], index: m[2].toUpperCase() };
+  }
+  return null;
 }
+
+$("problemUrl").addEventListener("input", () => {
+  const url = $("problemUrl").value.trim();
+  const parsed = parseCfUrl(url);
+  if (parsed) {
+    $("contest").value = parsed.contest;
+    $("index").value = parsed.index;
+    $("urlParseStatus").innerHTML = `detected contest <b>${parsed.contest}</b>, problem <b>${parsed.index}</b>`;
+  } else if (url) {
+    $("urlParseStatus").textContent = "couldn't auto-detect contest/index from this URL — fine, just fill Contest ID/Index or Custom ID manually";
+  } else {
+    $("urlParseStatus").textContent = "";
+  }
+  generate();
+});
+
+// ---------- Best-effort auto-fill from Codeforces API ----------
+$("autofillBtn").addEventListener("click", async () => {
+  const contest = $("contest").value.trim();
+  const index = $("index").value.trim();
+  const statusEl = $("autofillStatus");
+
+  if (!contest || !index) {
+    statusEl.textContent = "need a Contest ID and Index first (paste the URL above, or fill them in manually)";
+    statusEl.className = "err";
+    return;
+  }
+
+  statusEl.textContent = "fetching from Codeforces...";
+  statusEl.className = "";
+  const btn = $("autofillBtn");
+  btn.disabled = true;
+
+  try {
+    const resp = await fetch(`https://codeforces.com/api/contest.standings?contestId=${encodeURIComponent(contest)}&from=1&count=1`);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+    const data = await resp.json();
+    if (data.status !== "OK") throw new Error(data.comment || "API returned an error");
+
+    const problem = (data.result.problems || []).find(p => p.index.toUpperCase() === index.toUpperCase());
+    if (!problem) throw new Error(`no problem with index ${index} found in contest ${contest}`);
+
+    if (problem.name) $("title").value = problem.name;
+    if (problem.rating != null) $("rating").value = problem.rating;
+    if (problem.tags && problem.tags.length) $("tags").value = problem.tags.join(", ");
+
+    statusEl.textContent = "filled in title / rating / tags ✓";
+    statusEl.className = "ok";
+    generate();
+  } catch (e) {
+    statusEl.textContent = `couldn't auto-fill (${e.message}) — your browser or Codeforces may be blocking this; just fill the fields in manually`;
+    statusEl.className = "err";
+  } finally {
+    btn.disabled = false;
+  }
+});
 
 function generate() {
   const contest = $("contest").value.trim();
   const index = $("index").value.trim();
-  const id = (contest + index).toUpperCase();
-  const autoUrl = buildUrl(contest, index);
-  const useCustom = $("overrideUrl").checked;
-  const url = useCustom ? $("customUrl").value.trim() : autoUrl;
+  const customId = $("customId").value.trim();
+  const url = $("problemUrl").value.trim();
+
+  const id = customId
+    ? customId.toUpperCase()
+    : (contest && index ? (contest + index).toUpperCase() : "");
 
   $("idPreview").textContent = id || "—";
-  $("urlPreview").textContent = useCustom ? "(custom, see field below)" : (autoUrl || "—");
 
   const title = $("title").value.trim();
   const ratingRaw = $("rating").value.trim();
@@ -419,15 +568,19 @@ function generate() {
   const date = $("date").value;
   const tags = $("tags").value.split(",").map(t => t.trim()).filter(Boolean);
   const reason = $("reason").value.trim();
+  const problemStatement = $("problemStatement").value.trim();
+  const intuition = $("intuition").value.trim();
+  const whyWrong = $("whyWrong").value.trim();
+  const conceptsLearned = $("conceptsLearned").value.trim();
   const verdict = $("verdict").value;
-  const writeup = $("writeup").value;
+  const approach = $("approach").value;
 
   const errors = [];
-  if (!id) errors.push("Contest ID and Index are needed to build the problem id.");
+  if (!id) errors.push("Need either Contest ID + Index, or a Custom ID, to build the problem id.");
   if (!title) errors.push("Title is empty.");
-  if (!url) errors.push("No URL — fill in Contest/Index, or check the custom URL box.");
+  if (!url) errors.push("Problem URL is empty.");
   if (ratingRaw !== "" && Number.isNaN(rating)) errors.push("Rating isn't a number.");
-  if (!writeup.trim()) errors.push("Writeup is empty.");
+  if (!approach.trim()) errors.push("Approach is empty.");
 
   $("errors").innerHTML = errors.map(e => `<li>${escapeHtml(e)}</li>`).join("");
 
@@ -439,22 +592,15 @@ function generate() {
     return;
   }
 
-  const obj = {
-    id,
-    contest,
-    index: index.toUpperCase(),
-    title,
-    rating,
-    tags,
-    url,
-    date,
-    verdict,
-    reason: reason || undefined,
-    writeup,
-  };
-
-  // drop reason key entirely if empty, rather than writing "reason": null
-  if (!reason) delete obj.reason;
+  const obj = { id, title, rating, tags, url, date, verdict };
+  if (contest) obj.contest = contest;
+  if (index) obj.index = index.toUpperCase();
+  if (reason) obj.reason = reason;
+  if (problemStatement) obj.problemStatement = problemStatement;
+  if (intuition) obj.intuition = intuition;
+  if (whyWrong) obj.whyWrong = whyWrong;
+  if (conceptsLearned) obj.conceptsLearned = conceptsLearned;
+  obj.approach = approach;
 
   const json = JSON.stringify(obj, null, 2);
   $("output").textContent = json + ",";
@@ -625,8 +771,7 @@ $("publishBtn").addEventListener("click", async () => {
       const commitUrl = result.commit && result.commit.html_url;
       const fileUrl = `https://github.com/${owner}/${repo}/blob/${branch}/${path}`;
       setPublishStatus(
-        `${verb} "${lastObj.id}" and pushed to ${branch}. ` +
-        (commitUrl ? `View commit ↗` : `View file ↗`),
+        `${verb} "${lastObj.id}" and pushed to ${branch}. `,
         "ok"
       );
       const link = document.createElement("a");

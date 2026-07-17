@@ -363,7 +363,7 @@ a:hover { text-decoration: underline; }
 .reader-submeta span b { color: var(--text); font-weight: 600; }
 
 .reason-card {
-  margin: 0 0 26px;
+  margin: 0 0 22px;
   padding: 16px 18px;
   border-radius: 12px;
   background: linear-gradient(135deg, rgba(78, 196, 138, 0.10), rgba(90, 134, 255, 0.07));
@@ -387,6 +387,92 @@ a:hover { text-decoration: underline; }
   font-style: italic;
   color: var(--text);
   line-height: 1.65;
+}
+
+/* ---------- Info boxes ---------- */
+
+.box-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin: 0 0 14px;
+  max-width: 900px;
+}
+
+.box-grid:has(> :only-child) { grid-template-columns: 1fr; }
+
+@media (max-width: 700px) {
+  .box-grid { grid-template-columns: 1fr; }
+}
+
+.info-box {
+  border-radius: 12px;
+  padding: 15px 17px;
+  border: 1px solid var(--border-soft);
+  background: linear-gradient(160deg, var(--panel), var(--panel-2));
+  border-left: 3px solid var(--box-color, var(--border));
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.03) inset;
+}
+
+.info-box .box-label {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--box-color, var(--text-dim));
+  margin-bottom: 8px;
+}
+
+.info-box .box-content {
+  font-size: 13.5px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.info-box .box-content p:last-child { margin-bottom: 0; }
+
+.info-box--blue    { --box-color: var(--accent-2); }
+.info-box--purple  { --box-color: var(--tier-cm); }
+.info-box--cyan    { --box-color: var(--tier-specialist); }
+.info-box--orange  { --box-color: var(--tier-master); }
+.info-box--teal    { --box-color: #33c9a0; }
+
+.topic-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.topic-pills .row-tag {
+  border-color: var(--border-soft);
+}
+
+.approach-heading {
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin: 22px 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.reader-inner {
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity 0.35s var(--ease), transform 0.35s var(--ease);
+}
+
+.reader-inner.in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reader-inner { opacity: 1; transform: none; transition: none; }
 }
 
 .reader-body {

@@ -146,6 +146,19 @@ function selectProblem(id) {
   }
 }
 
+function md(text) {
+  if (!text) return "";
+  return window.marked ? marked.parse(text) : `<p>${escapeHtml(text)}</p>`;
+}
+
+function infoBox(label, contentHtml, variant) {
+  return `
+    <div class="info-box info-box--${variant}">
+      <span class="box-label">${escapeHtml(label)}</span>
+      <div class="box-content">${contentHtml}</div>
+    </div>`;
+}
+
 function renderReader() {
   const p = problems.find(p => p.id === activeId);
   if (!p) {
@@ -153,29 +166,64 @@ function renderReader() {
     return;
   }
   const tier = tierFor(p.rating);
-  const bodyHtml = window.marked ? marked.parse(p.writeup || "") : escapeHtml(p.writeup || "");
+  const approachHtml = md(p.approach || p.writeup || "");
+
+  const topicsBox = (p.tags && p.tags.length)
+    ? infoBox("Topics", `<div class="topic-pills">${p.tags.map(t => `<span class="row-tag">${escapeHtml(t)}</span>`).join("")}</div>`, "blue")
+    : "";
+
+  const statementBox = p.problemStatement
+    ? infoBox("Problem statement, in brief", md(p.problemStatement), "purple")
+    : "";
+
+  const intuitionBox = p.intuition
+    ? infoBox("My intuition", md(p.intuition), "cyan")
+    : "";
+
+  const whyWrongBox = p.whyWrong
+    ? infoBox("Why my intuition was wrong", md(p.whyWrong), "orange")
+    : "";
+
+  const conceptsBox = p.conceptsLearned
+    ? infoBox("Concepts I learned from this", md(p.conceptsLearned), "teal")
+    : "";
 
   els.reader.innerHTML = `
-    <div class="reader-meta">
-      <span class="verdict-badge">${escapeHtml(p.verdict || "Accepted")}</span>
-      <span class="reader-id">${escapeHtml(p.id)}</span>
-    </div>
-    <h2 class="reader-title">${escapeHtml(p.title)}</h2>
-    <div class="reader-submeta">
-      <span>rating <b style="color:${tier.color}">${p.rating != null ? p.rating : "unrated"}</b></span>
-      <span>tier <b style="color:${tier.color}">${escapeHtml(tier.name)}</b></span>
-      <span>solved <b>${escapeHtml(p.date || "—")}</b></span>
-    </div>
-    ${p.reason ? `
-    <div class="reason-card">
-      <span class="reason-label">Why I picked this</span>
-      <p>${escapeHtml(p.reason)}</p>
-    </div>` : ""}
-    <div class="reader-body">${bodyHtml}</div>
-    <div class="reader-footer">
-      <a href="${escapeAttr(p.url)}" target="_blank" rel="noopener">Open on Codeforces ↗</a>
+    <div class="reader-inner">
+      <div class="reader-meta">
+        <span class="verdict-badge">${escapeHtml(p.verdict || "Accepted")}</span>
+        <span class="reader-id">${escapeHtml(p.id || "")}</span>
+      </div>
+      <h2 class="reader-title">${escapeHtml(p.title)}</h2>
+      <div class="reader-submeta">
+        <span>rating <b style="color:${tier.color}">${p.rating != null ? p.rating : "unrated"}</b></span>
+        <span>tier <b style="color:${tier.color}">${escapeHtml(tier.name)}</b></span>
+        <span>solved <b>${escapeHtml(p.date || "—")}</b></span>
+      </div>
+
+      ${p.reason ? `
+      <div class="reason-card">
+        <span class="reason-label">Why I picked this</span>
+        <p>${escapeHtml(p.reason)}</p>
+      </div>` : ""}
+
+      ${(topicsBox || statementBox) ? `<div class="box-grid">${topicsBox}${statementBox}</div>` : ""}
+      ${(intuitionBox || whyWrongBox) ? `<div class="box-grid">${intuitionBox}${whyWrongBox}</div>` : ""}
+      ${conceptsBox}
+
+      <div class="approach-heading">Approach</div>
+      <div class="reader-body">${approachHtml}</div>
+
+      <div class="reader-footer">
+        <a href="${escapeAttr(p.url)}" target="_blank" rel="noopener">Open on Codeforces ↗</a>
+      </div>
     </div>
   `;
+
+  requestAnimationFrame(() => {
+    const inner = els.reader.querySelector(".reader-inner");
+    if (inner) inner.classList.add("in");
+  });
 }
 
 // ---------- Events ----------
